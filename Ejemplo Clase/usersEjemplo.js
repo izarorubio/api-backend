@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const bcrypt = require('bcrypt'); //  bcrypt para encriptar contraseñas
 const jwt = require('jsonwebtoken'); // jsonwebtoken para crear el JWT
-const pool = require('../db');
+const pool = require('../src/db');
 
 
 const router = express.Router();

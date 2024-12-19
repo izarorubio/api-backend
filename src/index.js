@@ -3,14 +3,20 @@
 
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
 const app = express();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 
 // Middleware para parsear JSON
 app.use(express.json());  // Necesario para leer req.body en formato JSON
+app.use(
+    cors({
+        origin:'*',
+    })
+)
 
 // Usar las rutas
 app.use('/products', productRoutes);
