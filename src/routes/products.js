@@ -14,6 +14,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Obtener la información de un productos
+router.get('/:id', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM products WHERE id = $1', [
+            req.params.id,
+        ]);
+        if (result.rows.lenght ===0)
+            return res.status(404).send('Producto no encontrado')
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener los productos' });
+    }
+});
+
 // Crear un producto
 router.post('/addOne', async (req, res) => {
     const { title, price, description, category_id, image, rating } = req.body;
@@ -28,6 +43,7 @@ router.post('/addOne', async (req, res) => {
         res.status(500).json({ error: 'Error al crear el producto' });
     }
 });
+
 
 // Eliminar un producto
 router.delete('/:id', async (req, res) => {
