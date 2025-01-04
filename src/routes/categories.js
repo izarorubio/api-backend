@@ -1,18 +1,18 @@
-require('dotenv').config();
 const express = require('express');
-const pool = require('../db');
+const {
+    getAllCategories,
+    getCategoryById,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+} = require('../controllers/categoriesController');
 
 const router = express.Router();
 
-// Obtener todas las categorías
-router.get('/', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM category');
-        res.json(result.rows);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener las categorías' });
-    }
-});
+router.get('/', getAllCategories);
+router.get('/:id', getCategoryById);
+router.post('/', createCategory);
+router.put('/:id', updateCategory);
+router.delete('/:id', deleteCategory);
 
 module.exports = router;
