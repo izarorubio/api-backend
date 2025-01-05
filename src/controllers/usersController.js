@@ -74,6 +74,24 @@ const updateUser = async (req, res, next) => {
     }
 };
 
+const loginUser = async (req, res, next) => {
+    const { correo, contraseña } = req.body;
+    try {
+        const user = await pool.query('SELECT * FROM users WHERE correo = $1', [correo]);
+        if (user.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const isPasswordValid = await bcrypt.compare(contraseña, user.rows[0].contraseña);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (error) {
+        next(error);
+    }
+};
+
 // Eliminar un usuario
 const deleteUser = async (req, res, next) => {
     const { id } = req.params;
@@ -94,4 +112,5 @@ module.exports = {
     getAllUsers,
     updateUser,
     deleteUser,
+    loginUser,
 };
