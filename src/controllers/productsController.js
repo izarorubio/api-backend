@@ -2,8 +2,22 @@ const pool = require('../db');
 
 // Obtener todos los productos
 const getAllProducts = async (req, res, next) => {
+    const { category, limit } = req.query;
     try {
-        const result = await pool.query('SELECT * FROM products');
+        let query = 'SELECT * FROM products';
+        const params = [];
+
+        if (category) {
+            params.push(category);
+            query += ` WHERE category_id = $${params.length}`;
+        }
+
+        if (limit) {
+            params.push(limit);
+            query += ` LIMIT $${params.length}`;
+        }
+
+        const result = await pool.query(query, params);
         res.json(result.rows);
     } catch (error) {
         next(error);
