@@ -9,7 +9,7 @@ const getAllProducts = async (req, res, next) => {
 
         if (category) {
             params.push(category);
-            query += ` WHERE category_id = $${params.length}`;
+            query += ` WHERE category = $${params.length}`;
         }
 
         if (limit) {
