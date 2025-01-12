@@ -1,7 +1,10 @@
 const errorHandler = (err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        error: 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.',
+    console.error(err);
+    if (err.code === '23505') {
+        return res.status(409).json({ error: 'Recurso duplicado' });
+    }
+    res.status(err.status || 500).json({
+        error: err.message || 'Error en el servidor',
     });
 };
 

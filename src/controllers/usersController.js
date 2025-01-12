@@ -26,7 +26,7 @@ const createUser = async (req, res, next) => {
         // Verificar si el correo ya existe en la base de datos
         const existingUser = await pool.query('SELECT * FROM users WHERE correo = $1', [correo]);
         if (existingUser.rows.length > 0) {
-            return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
+            return res.status(409).json({ error: 'El correo electrónico ya está registrado' });
         }
 
         const hashedPassword = await bcrypt.hash(contraseña, 10);

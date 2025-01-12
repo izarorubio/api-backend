@@ -6,17 +6,15 @@ const getAllProducts = async (req, res, next) => {
     try {
         let query = 'SELECT * FROM products';
         const params = [];
-
         if (category) {
             params.push(category);
             query += ` WHERE category = $${params.length}`;
         }
-
         if (limit) {
+            if (isNaN(limit)) return res.status(400).json({ error: 'El límite debe ser un número' });
             params.push(limit);
             query += ` LIMIT $${params.length}`;
         }
-
         const result = await pool.query(query, params);
         res.json(result.rows);
     } catch (error) {

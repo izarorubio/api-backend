@@ -13,6 +13,8 @@ const getAllCategories = async (req, res, next) => {
 // Obtener una categoría por ID
 const getCategoryById = async (req, res, next) => {
     const { id } = req.params;
+    if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' });
+
     try {
         const result = await pool.query('SELECT * FROM category WHERE id = $1', [id]);
         if (result.rows.length === 0) {
@@ -27,6 +29,9 @@ const getCategoryById = async (req, res, next) => {
 // Crear una nueva categoría
 const createCategory = async (req, res, next) => {
     const { name, description } = req.body;
+    if (!name || !description) {
+        return res.status(400).json({ error: 'Nombre y descripción son obligatorios' });
+    }
     try {
         const result = await pool.query(
             'INSERT INTO category (name, description) VALUES ($1, $2) RETURNING *',
